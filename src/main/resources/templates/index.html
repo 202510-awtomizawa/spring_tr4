@@ -9,8 +9,10 @@
     th, td { border: 1px solid #ccc; padding: 8px; }
     th { background: #2884fc; color: #ffffff; }
     .actions form { display: inline; }
+    .checkbox-cell { text-align: center; width: 40px; }
     .message { margin: 12px 0; color: #666; }
-    .completed-row { background: #B0B6BF; }
+    .completed-row { background: #E2E8F0; color: #64748B; }
+    .incomplete-row { background: #FFFFFF; }
   </style>
 </head>
 <body>
@@ -48,6 +50,7 @@
   <table th:if="${!#lists.isEmpty(todos)}">
     <thead>
       <tr>
+        <th></th>
         <th>No</th>
         <th>タイトル</th>
         <th>作成者</th>
@@ -58,7 +61,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr th:each="todo, stat : ${todos}" th:classappend="${todo.completed} ? 'completed-row' : ''">
+      <tr th:each="todo, stat : ${todos}" th:classappend="${todo.completed} ? 'completed-row' : 'incomplete-row'">
+        <td class="checkbox-cell">
+          <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
+            <input type="checkbox" th:checked="${todo.completed}" onchange="this.form.submit()">
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          </form>
+        </td>
         <td th:text="${stat.count}">1</td>
         <td th:text="${todo.title}">タイトル</td>
         <td th:text="${todo.author}">作成者</td>
