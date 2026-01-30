@@ -13,6 +13,21 @@
     .message { margin: 12px 0; color: #666; }
     .completed-row { background: #E2E8F0; color: #64748B; }
     .incomplete-row { background: #FFFFFF; }
+    .new-todo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #2964E6;
+      color: #E0F2FE;
+      font-size: 24px;
+      line-height: 1;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .new-todo-btn:hover { background: #1D4ED8; }
   </style>
 </head>
 <body>
@@ -42,7 +57,7 @@
   </form>
 
   <p>
-    <a th:href="@{/todos/new}">新規登録</a>
+    <a class="new-todo-btn" th:href="@{/todos/new}" aria-label="新規登録">＋</a>
   </p>
 
   <div th:if="${#lists.isEmpty(todos)}" class="message">データはありません</div>
