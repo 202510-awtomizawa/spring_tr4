@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo確認</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    table { border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ccc; }
+    th { background: #f5f5f5; text-align: left; width: 140px; }
+  </style>
+</head>
+<body>
+  <h1>ToDo確認</h1>
+  <p>上記で登録して良いですか？</p>
+
+  <table>
+    <tr>
+      <th>作成者</th>
+      <td th:text="${todo.author}">作成者</td>
+    </tr>
+    <tr>
+      <th>タイトル</th>
+      <td th:text="${todo.title}">タイトル</td>
+    </tr>
+    <tr>
+      <th>詳細</th>
+      <td th:text="${todo.detail}">詳細</td>
+    </tr>
+    <tr>
+      <th>状態</th>
+      <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
+    </tr>
+  </table>
+
+  <form method="post" th:action="@{/todos}" style="display:inline;">
+    <input type="hidden" name="id" th:value="${todo.id}">
+    <input type="hidden" name="author" th:value="${todo.author}">
+    <input type="hidden" name="title" th:value="${todo.title}">
+    <input type="hidden" name="detail" th:value="${todo.detail}">
+    <input type="hidden" name="completed" th:value="${todo.completed}">
+    <button type="submit">登録</button>
+  </form>
+
+  <form method="post" th:action="@{/todos/new}" style="display:inline;">
+    <input type="hidden" name="id" th:value="${todo.id}">
+    <input type="hidden" name="author" th:value="${todo.author}">
+    <input type="hidden" name="title" th:value="${todo.title}">
+    <input type="hidden" name="detail" th:value="${todo.detail}">
+    <input type="hidden" name="completed" th:value="${todo.completed}">
+    <button type="submit">修正</button>
+  </form>
+</body>
+</html>
