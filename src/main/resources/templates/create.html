@@ -52,6 +52,7 @@
             <option value="">未分類</option>
             <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
           </select>
+          <a th:href="@{/categories}" style="margin-left: 8px;">カテゴリ編集</a>
         </td>
       </tr>
     </table>

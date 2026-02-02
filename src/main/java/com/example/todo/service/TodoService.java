@@ -7,19 +7,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.todo.entity.Category;
 import com.example.todo.entity.Todo;
-import com.example.todo.repository.CategoryRepository;
 import com.example.todo.repository.TodoRepository;
 
 @Service
 public class TodoService {
   private final TodoRepository todoRepository;
-  private final CategoryRepository categoryRepository;
+  private final CategoryService categoryService;
 
-  public TodoService(TodoRepository todoRepository, CategoryRepository categoryRepository) {
+  public TodoService(TodoRepository todoRepository, CategoryService categoryService) {
     this.todoRepository = todoRepository;
-    this.categoryRepository = categoryRepository;
+    this.categoryService = categoryService;
   }
 
   public List<Todo> findAll(String keyword, Long categoryId, Sort sort) {
@@ -70,8 +68,7 @@ public class TodoService {
       return;
     }
     Long categoryId = todo.getCategory().getId();
-    Optional<Category> category = categoryRepository.findById(categoryId);
-    todo.setCategory(category.orElse(null));
+    todo.setCategory(categoryService.findById(categoryId).orElse(null));
   }
 }
 

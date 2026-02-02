@@ -96,6 +96,7 @@
                 th:selected="${categoryId != null && categoryId == cat.id}"></option>
       </select>
     </label>
+    <a th:href="@{/categories}">カテゴリ編集</a>
     <button type="submit">検索/並び替え</button>
     <a th:href="@{/todos}">クリア</a>
   </form>

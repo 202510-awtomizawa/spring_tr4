@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.todo.entity.Category;
 import com.example.todo.entity.Todo;
-import com.example.todo.repository.CategoryRepository;
+import com.example.todo.service.CategoryService;
 import com.example.todo.service.TodoService;
 
 import jakarta.validation.Valid;
@@ -26,16 +26,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/todos")
 public class TodoController {
   private final TodoService todoService;
-  private final CategoryRepository categoryRepository;
+  private final CategoryService categoryService;
 
-  public TodoController(TodoService todoService, CategoryRepository categoryRepository) {
+  public TodoController(TodoService todoService, CategoryService categoryService) {
     this.todoService = todoService;
-    this.categoryRepository = categoryRepository;
+    this.categoryService = categoryService;
   }
 
   @ModelAttribute("categories")
   public List<Category> categories() {
-    return categoryRepository.findAllByOrderByNameAsc();
+    return categoryService.findAllOrderById();
   }
 
   @GetMapping
@@ -73,9 +73,6 @@ public class TodoController {
   public String confirm(@Valid @ModelAttribute("todo") Todo todo, BindingResult result) {
     if (result.hasErrors()) {
       return "create";
-    }
-    if (todo.getCategory() != null && todo.getCategory().getId() != null) {
-      categoryRepository.findById(todo.getCategory().getId()).ifPresent(todo::setCategory);
     }
     return "confirm";
   }
