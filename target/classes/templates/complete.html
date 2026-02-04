@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo完了</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    table { border-collapse: collapse; }
+    th, td { padding: 8px; border: 1px solid #ccc; }
+    th { background: #f5f5f5; text-align: left; width: 140px; }
+  </style>
+</head>
+<body>
+  <h1>ToDo完了</h1>
+  <p>上記で登録しました。</p>
+
+  <table>
+    <tr>
+      <th>作成者</th>
+      <td th:text="${todo.author}">作成者</td>
+    </tr>
+    <tr>
+      <th>タイトル</th>
+      <td th:text="${todo.title}">タイトル</td>
+    </tr>
+    <tr>
+      <th>詳細</th>
+      <td th:text="${todo.detail}">詳細</td>
+    </tr>
+    <tr>
+      <th>状態</th>
+      <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
+    </tr>
+    <tr>
+      <th>カテゴリ</th>
+      <td th:text="${(todo.category != null && todo.category.id != null) ? todo.category.name : '未分類'}">未分類</td>
+    </tr>
+  </table>
+
+  <p><a th:href="@{/todos}">一覧へ</a></p>
+</body>
+</html>

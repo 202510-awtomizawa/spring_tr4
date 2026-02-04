@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.todo.mapper.CategoryMapper">
+  <resultMap id="CategoryMap" type="com.example.todo.entity.Category">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <result property="color" column="color" />
+  </resultMap>
+
+  <select id="findAllOrderById" resultMap="CategoryMap">
+    SELECT id, name, color
+    FROM category
+    ORDER BY id
+  </select>
+
+  <select id="findById" parameterType="long" resultMap="CategoryMap">
+    SELECT id, name, color
+    FROM category
+    WHERE id = #{id}
+  </select>
+
+  <select id="countById" parameterType="long" resultType="int">
+    SELECT COUNT(*)
+    FROM category
+    WHERE id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="com.example.todo.entity.Category">
+    INSERT INTO category (id, name, color)
+    VALUES (#{id}, #{name}, #{color})
+  </insert>
+
+  <update id="update" parameterType="com.example.todo.entity.Category">
+    UPDATE category
+    SET name = #{name},
+        color = #{color}
+    WHERE id = #{id}
+  </update>
+</mapper>
