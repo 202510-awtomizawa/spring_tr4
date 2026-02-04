@@ -219,7 +219,7 @@
                 th:text="${todo.priority.displayName}"
                 th:classappend="' ' + ${todo.priority.cssClass}"></span>
         </td>
-        <td th:classappend="${(todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : ''} + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')"
+        <td th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
             th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
         <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
         <td th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
