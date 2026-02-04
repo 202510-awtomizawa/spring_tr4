@@ -2,5 +2,5 @@
 .priority-medium { background: #fffbeb; color: #d97706; }
 .priority-low { background: #f0fdf4; color: #16a34a; }
 .deadline-overdue { background: #fef2f2; color: #dc2626; border-left: 4px solid #dc2626; }
-.deadline-today { background: #d32f2f; color: #b71c1c; font-weight: bold; }
+.deadline-today { background: #fdecea; color: #b71c1c; font-weight: bold; }
 .deadline-soon { background: #fffbeb; color: #d97706; }
