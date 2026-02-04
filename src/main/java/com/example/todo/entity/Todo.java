@@ -5,11 +5,14 @@ import java.time.LocalDateTime;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -40,6 +43,10 @@ public class Todo {
   @Column(nullable = false)
   private boolean completed;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 10)
+  private Priority priority = Priority.MEDIUM;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
@@ -59,11 +66,24 @@ public class Todo {
     if (updatedAt == null) {
       updatedAt = now;
     }
+    if (priority == null) {
+      priority = Priority.MEDIUM;
+    }
   }
 
   @PreUpdate
   public void preUpdate() {
     updatedAt = LocalDateTime.now();
+    if (priority == null) {
+      priority = Priority.MEDIUM;
+    }
+  }
+
+  @PostLoad
+  public void postLoad() {
+    if (priority == null) {
+      priority = Priority.MEDIUM;
+    }
   }
 
   public Long getId() {
@@ -104,6 +124,14 @@ public class Todo {
 
   public void setCompleted(boolean completed) {
     this.completed = completed;
+  }
+
+  public Priority getPriority() {
+    return priority;
+  }
+
+  public void setPriority(Priority priority) {
+    this.priority = priority;
   }
 
   public Category getCategory() {

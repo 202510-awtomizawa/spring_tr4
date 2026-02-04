@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.todo.entity.Category;
+import com.example.todo.entity.Priority;
 import com.example.todo.entity.Todo;
 import com.example.todo.service.CategoryService;
 import com.example.todo.service.TodoService;
@@ -38,20 +39,27 @@ public class TodoController {
     return categoryService.findAllOrderById();
   }
 
+  @ModelAttribute("priorities")
+  public Priority[] priorities() {
+    return Priority.values();
+  }
+
   @GetMapping
   public String index(
       @RequestParam(name = "q", required = false) String keyword,
       @RequestParam(name = "categoryId", required = false) Long categoryId,
+      @RequestParam(name = "priority", required = false) Priority priority,
       @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
       @RequestParam(name = "dir", defaultValue = "desc") String direction,
       @RequestParam(name = "bulk", defaultValue = "false") boolean bulk,
       Model model) {
     Sort sort = Sort.by("completed").ascending()
         .and(Sort.by(Sort.Direction.fromString(direction), sortField));
-    List<Todo> todos = todoService.findAll(keyword, categoryId, sort);
+    List<Todo> todos = todoService.findAll(keyword, categoryId, priority, sort);
     model.addAttribute("todos", todos);
     model.addAttribute("q", keyword == null ? "" : keyword);
     model.addAttribute("categoryId", categoryId);
+    model.addAttribute("priority", priority);
     model.addAttribute("sort", sortField);
     model.addAttribute("dir", direction);
     model.addAttribute("bulk", bulk);
