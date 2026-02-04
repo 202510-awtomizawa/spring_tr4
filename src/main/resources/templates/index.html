@@ -73,58 +73,75 @@
       font-size: 12px;
       font-weight: bold;
     }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .icon-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #search-panel { display: none; }
+    #search-panel.open { display: block; }
   </style>
 </head>
 <body th:classappend="${bulk} ? 'bulk-mode' : ''">
-  <h1>ToDo一覧</h1>
+  <div class="page-header">
+    <h1>ToDo一覧</h1>
+    <p class="icon-group" th:if="${!bulk}">
+      <a class="new-todo-btn" th:href="@{/todos/new}" title="新規追加" aria-label="新規追加">＋</a>
+      <button class="icon-btn" type="button" id="search-toggle" title="検索" aria-label="検索">🔍</button>
+      <a class="icon-btn" th:href="@{/categories}" title="カテゴリ編集" aria-label="カテゴリ編集">🏷</a>
+      <a class="icon-btn" th:href="@{/todos(bulk=true)}" title="一括削除モード" aria-label="一括削除モード">🗑</a>
+    </p>
+  </div>
 
-  <form id="search-form" method="get" th:action="@{/todos}" th:if="${!bulk}">
-    <label>検索:
-      <input type="text" name="q" th:value="${q}">
-    </label>
-    <label>並び替え:
-      <select name="sort" th:value="${sort}">
-        <option value="createdAt" th:selected="${sort == 'createdAt'}">作成日</option>
-        <option value="updatedAt" th:selected="${sort == 'updatedAt'}">更新日</option>
-        <option value="title" th:selected="${sort == 'title'}">タイトル</option>
-        <option value="author" th:selected="${sort == 'author'}">作成者</option>
-        <option value="completed" th:selected="${sort == 'completed'}">状態</option>
-        <option value="priority" th:selected="${sort == 'priority'}">優先度</option>
-      </select>
-    </label>
-    <label>順序:
-      <select name="dir" th:value="${dir}">
-        <option value="asc" th:selected="${dir == 'asc'}">昇順</option>
-        <option value="desc" th:selected="${dir == 'desc'}">降順</option>
-      </select>
-    </label>
-    <label>カテゴリ:
-      <select name="categoryId">
-        <option value="" th:selected="${categoryId == null}">すべて</option>
-        <option th:each="cat : ${categories}"
-                th:value="${cat.id}"
-                th:text="${cat.name}"
-                th:selected="${categoryId != null && categoryId == cat.id}"></option>
-      </select>
-    </label>
-    <label>優先度:
-      <select name="priority">
-        <option value="" th:selected="${priority == null}">すべて</option>
-        <option th:each="p : ${priorities}"
-                th:value="${p}"
-                th:text="${p.displayName}"
-                th:selected="${priority != null && priority == p}"></option>
-      </select>
-    </label>
-    <a th:href="@{/todos}">クリア</a>
-  </form>
-
-  <p th:if="${!bulk}">
-    <a class="new-todo-btn" th:href="@{/todos/new}" aria-label="新規登録">＋</a>
-    <button class="icon-btn" type="submit" form="search-form" title="検索" aria-label="検索">🔍</button>
-    <a class="icon-btn" th:href="@{/categories}" title="カテゴリ編集" aria-label="カテゴリ編集">🏷</a>
-    <a class="icon-btn" th:href="@{/todos(bulk=true)}" aria-label="一括削除モード">🗑</a>
-  </p>
+  <div id="search-panel"
+       th:if="${!bulk}"
+       th:classappend="${(q != null && q != '') or categoryId != null or priority != null or sort != 'createdAt' or dir != 'desc'} ? ' open' : ''">
+    <form id="search-form" method="get" th:action="@{/todos}">
+      <label>検索:
+        <input type="text" name="q" th:value="${q}">
+      </label>
+      <label>並び替え:
+        <select name="sort" th:value="${sort}">
+          <option value="createdAt" th:selected="${sort == 'createdAt'}">作成日</option>
+          <option value="updatedAt" th:selected="${sort == 'updatedAt'}">更新日</option>
+          <option value="title" th:selected="${sort == 'title'}">タイトル</option>
+          <option value="author" th:selected="${sort == 'author'}">作成者</option>
+          <option value="completed" th:selected="${sort == 'completed'}">状態</option>
+          <option value="priority" th:selected="${sort == 'priority'}">優先度</option>
+        </select>
+      </label>
+      <label>順序:
+        <select name="dir" th:value="${dir}">
+          <option value="asc" th:selected="${dir == 'asc'}">昇順</option>
+          <option value="desc" th:selected="${dir == 'desc'}">降順</option>
+        </select>
+      </label>
+      <label>カテゴリ:
+        <select name="categoryId">
+          <option value="" th:selected="${categoryId == null}">すべて</option>
+          <option th:each="cat : ${categories}"
+                  th:value="${cat.id}"
+                  th:text="${cat.name}"
+                  th:selected="${categoryId != null && categoryId == cat.id}"></option>
+        </select>
+      </label>
+      <label>優先度:
+        <select name="priority">
+          <option value="" th:selected="${priority == null}">すべて</option>
+          <option th:each="p : ${priorities}"
+                  th:value="${p}"
+                  th:text="${p.displayName}"
+                  th:selected="${priority != null && priority == p}"></option>
+        </select>
+      </label>
+      <a th:href="@{/todos}">クリア</a>
+    </form>
+  </div>
 
   <form id="bulk-form" method="post" th:if="${bulk}" th:action="@{/todos/bulk/confirm}">
     <div class="bulk-header">
@@ -252,6 +269,34 @@
     });
 
     updateCount();
+  </script>
+  <script th:if="${!bulk}">
+    const searchToggle = document.getElementById('search-toggle');
+    const searchPanel = document.getElementById('search-panel');
+    const searchInput = document.querySelector('#search-panel input[name="q"]');
+
+    const openSearchPanel = () => {
+      if (!searchPanel) {
+        return;
+      }
+      searchPanel.classList.add('open');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    };
+
+    if (searchToggle && searchPanel) {
+      searchToggle.addEventListener('click', () => {
+        const isOpen = searchPanel.classList.toggle('open');
+        if (isOpen && searchInput) {
+          searchInput.focus();
+        }
+      });
+    }
+
+    if (searchPanel && searchPanel.classList.contains('open')) {
+      openSearchPanel();
+    }
   </script>
 </body>
 </html>
