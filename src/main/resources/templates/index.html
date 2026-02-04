@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ToDo一覧</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
   <style>
     body { font-family: Arial, sans-serif; margin: 24px; }
     table { border-collapse: collapse; width: 100%; }
@@ -63,6 +64,15 @@
       font-size: 12px;
       font-weight: bold;
     }
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body th:classappend="${bulk} ? 'bulk-mode' : ''">
@@ -79,6 +89,7 @@
         <option value="title" th:selected="${sort == 'title'}">タイトル</option>
         <option value="author" th:selected="${sort == 'author'}">作成者</option>
         <option value="completed" th:selected="${sort == 'completed'}">状態</option>
+        <option value="priority" th:selected="${sort == 'priority'}">優先度</option>
       </select>
     </label>
     <label>順序:
@@ -96,13 +107,22 @@
                 th:selected="${categoryId != null && categoryId == cat.id}"></option>
       </select>
     </label>
-    <a th:href="@{/categories}">カテゴリ編集</a>
+    <label>優先度:
+      <select name="priority">
+        <option value="" th:selected="${priority == null}">すべて</option>
+        <option th:each="p : ${priorities}"
+                th:value="${p}"
+                th:text="${p.displayName}"
+                th:selected="${priority != null && priority == p}"></option>
+      </select>
+    </label>
     <button type="submit">検索/並び替え</button>
     <a th:href="@{/todos}">クリア</a>
   </form>
 
   <p th:if="${!bulk}">
     <a class="new-todo-btn" th:href="@{/todos/new}" aria-label="新規登録">＋</a>
+    <a class="icon-btn" th:href="@{/categories}" title="カテゴリ編集" aria-label="カテゴリ編集">🏷</a>
     <a class="icon-btn" th:href="@{/todos(bulk=true)}" aria-label="一括削除モード">🗑</a>
   </p>
 
@@ -131,6 +151,7 @@
         <th>タイトル</th>
         <th>作成者</th>
         <th>カテゴリ</th>
+        <th>優先度</th>
         <th>状態</th>
         <th>作成日</th>
         <th>更新日</th>
@@ -159,6 +180,11 @@
                 th:text="${todo.category.name}"
                 th:style="'background:' + ${todo.category.color} + ';'"></span>
           <span th:if="${todo.category == null || todo.category.id == null}">未分類</span>
+        </td>
+        <td>
+          <span class="priority-badge"
+                th:text="${todo.priority.displayName}"
+                th:classappend="' ' + ${todo.priority.cssClass}"></span>
         </td>
         <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
         <td th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>

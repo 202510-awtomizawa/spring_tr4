@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.todo.entity.Priority;
 import com.example.todo.entity.Todo;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
@@ -20,10 +21,12 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
           or lower(t.title) like lower(concat('%', :keyword, '%'))
           or lower(t.author) like lower(concat('%', :keyword, '%')))
         and (:categoryId is null or c.id = :categoryId)
+        and (:priority is null or t.priority = :priority)
       """)
   List<Todo> search(
       @Param("keyword") String keyword,
       @Param("categoryId") Long categoryId,
+      @Param("priority") Priority priority,
       Sort sort);
 
   @EntityGraph(attributePaths = "category")

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.todo.entity.Priority;
 import com.example.todo.entity.Todo;
 import com.example.todo.repository.TodoRepository;
 
@@ -20,9 +21,9 @@ public class TodoService {
     this.categoryService = categoryService;
   }
 
-  public List<Todo> findAll(String keyword, Long categoryId, Sort sort) {
+  public List<Todo> findAll(String keyword, Long categoryId, Priority priority, Sort sort) {
     String q = keyword == null ? null : keyword.trim();
-    return todoRepository.search(q, categoryId, sort);
+    return todoRepository.search(q, categoryId, priority, sort);
   }
 
   public Optional<Todo> findById(Long id) {
@@ -39,6 +40,9 @@ public class TodoService {
       todoRepository.findById(todo.getId()).ifPresent(existing -> {
         todo.setCreatedAt(existing.getCreatedAt());
       });
+    }
+    if (todo.getPriority() == null) {
+      todo.setPriority(Priority.MEDIUM);
     }
     normalizeCategory(todo);
     return todoRepository.save(todo);

@@ -32,6 +32,10 @@
       <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
     </tr>
     <tr>
+      <th>優先度</th>
+      <td th:text="${todo.priority.displayName}">中</td>
+    </tr>
+    <tr>
       <th>カテゴリ</th>
       <td th:text="${(todo.category != null && todo.category.id != null) ? todo.category.name : '未分類'}">未分類</td>
     </tr>
@@ -43,6 +47,7 @@
     <input type="hidden" name="title" th:value="${todo.title}">
     <input type="hidden" name="detail" th:value="${todo.detail}">
     <input type="hidden" name="completed" th:value="${todo.completed}">
+    <input type="hidden" name="priority" th:value="${todo.priority}">
     <input type="hidden" name="category.id" th:value="${todo.category != null ? todo.category.id : ''}">
     <button type="submit">登録</button>
   </form>
@@ -53,6 +58,7 @@
     <input type="hidden" name="title" th:value="${todo.title}">
     <input type="hidden" name="detail" th:value="${todo.detail}">
     <input type="hidden" name="completed" th:value="${todo.completed}">
+    <input type="hidden" name="priority" th:value="${todo.priority}">
     <input type="hidden" name="category.id" th:value="${todo.category != null ? todo.category.id : ''}">
     <button type="submit">修正</button>
   </form>

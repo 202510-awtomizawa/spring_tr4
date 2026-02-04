@@ -46,6 +46,14 @@
         </td>
       </tr>
       <tr>
+        <th>優先度</th>
+        <td>
+          <select th:field="*{priority}">
+            <option th:each="p : ${priorities}" th:value="${p}" th:text="${p.displayName}"></option>
+          </select>
+        </td>
+      </tr>
+      <tr>
         <th>カテゴリ</th>
         <td>
           <select th:field="*{category.id}">
