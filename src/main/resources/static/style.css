@@ -86,3 +86,7 @@
   padding: 0;
   overflow: hidden;
 }
+.todo-table {
+  width: 150%;
+  margin: 0 auto;
+}

@@ -11,16 +11,52 @@
     th { background: #2884fc; color: #ffffff; }
     .actions form { display: inline; }
     .checkbox-cell { text-align: center; width: 40px; }
-    .col-check {
+    .title-cell {
+      text-align: left;
+      width: 70%;
+    }
+    .task-title-wrap {
+      display: flex;
+      align-items: center;
+    }
+    .task-check {
       width: 48px;
       min-width: 48px;
       max-width: 48px;
-      text-align: center;
-      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1em;
     }
-    .title-cell { text-align: left; width: 70%; }
-    .col-check { border-right: 0; }
-    .title-cell { border-left: 0; }
+    .custom-check-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .custom-check-label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .custom-check-label::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      border: 2px solid #4b5563;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      color: #2563eb;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .custom-check-input:checked + .custom-check-label::before {
+      content: "✔";
+    }
+    .col-hidden { display: none; }
     .message { margin: 12px 0; color: #666; }
     .no-data { text-align: center; }
     .completed-row { background: #E2E8F0; color: #64748B; }
@@ -321,21 +357,47 @@
   <div th:if="${#lists.isEmpty(todos)}" class="message no-data">データはありません</div>
 
   <div class="todo-table-card" th:if="${!#lists.isEmpty(todos)}">
-    <table>
+    <table class="todo-table">
       <tbody>
         <tr th:each="todo, stat : ${todos}"
             th:class="${todo.completed} ? 'completed-row' : 'incomplete-row'"
             th:classappend="${bulk} ? ' bulk-row' : ''">
-          <td th:if="${bulk}" class="checkbox-cell col-check">
-            <input class="bulk-select" type="checkbox" name="ids" th:value="${todo.id}" form="bulk-form">
+          <td class="title-cell">
+            <div class="task-title-wrap">
+              <span class="task-check" th:if="${bulk}">
+                <input class="bulk-select" type="checkbox" name="ids" th:value="${todo.id}" form="bulk-form">
+              </span>
+              <span class="task-check" th:if="${!bulk}">
+                <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
+                  <input type="checkbox" th:checked="${todo.completed}" onchange="this.form.submit()">
+                  <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                </form>
+              </span>
+              <span th:text="${todo.title}">タイトル</span>
+            </div>
           </td>
-          <td class="checkbox-cell col-check" th:if="${!bulk}">
-            <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
-              <input type="checkbox" th:checked="${todo.completed}" onchange="this.form.submit()">
-              <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            </form>
+          <td class="col-hidden" th:text="${stat.count}">1</td>
+          <td class="col-hidden" th:text="${todo.author}">作成者</td>
+          <td class="col-hidden">
+            <span class="category-badge"
+                  th:if="${todo.category != null && todo.category.id != null}"
+                  th:text="${todo.category.name}"
+                  th:style="'background:' + ${todo.category.color} + ';'"></span>
+            <span th:if="${todo.category == null || todo.category.id == null}">未分類</span>
           </td>
-          <td class="title-cell" th:text="${todo.title}">タイトル</td>
+          <td class="col-hidden">
+            <span class="priority-badge"
+                  th:text="${todo.priority.displayName}"
+                  th:classappend="' ' + ${todo.priority.cssClass}"></span>
+          </td>
+          <td class="col-hidden" th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
+              th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
+          <td class="col-hidden" th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
+          <td class="col-hidden" th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
+          <td class="col-hidden" th:text="${#temporals.format(todo.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
+          <td class="col-hidden actions">
+            <a th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a>
+          </td>
         </tr>
       </tbody>
     </table>
