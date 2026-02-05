@@ -12,6 +12,7 @@
     .actions form { display: inline; }
     .checkbox-cell { text-align: center; width: 40px; }
     .message { margin: 12px 0; color: #666; }
+    .no-data { text-align: center; }
     .completed-row { background: #E2E8F0; color: #64748B; }
     .incomplete-row { background: #FFFFFF; }
     .completed-row td.deadline-overdue,
@@ -85,30 +86,23 @@
       font-size: 12px;
       font-weight: bold;
     }
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-    }
-    .page-header h1 {
-      width: 100%;
-      text-align: center;
-    }
+    .page-header { text-align: center; }
     .todo-header-card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 12px 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+      background: transparent;
+      border: 0;
+      padding: 0;
       margin-bottom: 12px;
-      box-sizing: border-box;
+      box-shadow: none;
     }
     .todo-header-title {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin: 0;
+      margin: 0 auto;
+      padding: 12px 20px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
     }
     .todo-header-icon {
       font-size: 20px;
@@ -301,7 +295,7 @@
     <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
   </form>
 
-  <div th:if="${#lists.isEmpty(todos)}" class="message">データはありません</div>
+  <div th:if="${#lists.isEmpty(todos)}" class="message no-data">データはありません</div>
 
   <div class="todo-table-card" th:if="${!#lists.isEmpty(todos)}">
     <table>
