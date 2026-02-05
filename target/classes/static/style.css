@@ -4,3 +4,85 @@
 .deadline-overdue { background: #fef2f2; color: #dc2626; border-left: 4px solid #dc2626; }
 .deadline-today { background: #fdecea; color: #b71c1c; font-weight: bold; }
 .deadline-soon { background: #fffbeb; color: #d97706; }
+.page-layout { display: flex; align-items: flex-start; gap: 16px; }
+.main-content { flex: 1; min-width: 0; }
+.sidebar {
+  background: #f8fafc;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 12px;
+  box-sizing: border-box;
+  display: inline-block;
+  width: max-content;
+  white-space: nowrap;
+  transition: width 0.2s ease;
+}
+.sidebar-title { font-weight: bold; margin-bottom: 12px; }
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sidebar-item { margin: 0; }
+.sidebar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #111827;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.sidebar-link:hover {
+  background: #eef2f7;
+  border-color: #d1d5db;
+}
+.sidebar-icon { width: 20px; text-align: center; }
+.sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.sidebar-toggle:hover { background: #f3f4f6; }
+.sidebar-collapsed { width: 56px; }
+.sidebar-collapsed .sidebar-title { display: none; }
+.sidebar-collapsed .sidebar-text { display: none; }
+.sidebar-collapsed .sidebar-link { justify-content: center; }
+.ui-title-wrap { text-align: center; margin-bottom: 12px; }
+.ui-title-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+  margin: 0;
+}
+.ui-card {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 16px;
+  box-sizing: border-box;
+}
+.ui-card--flush {
+  padding: 0;
+  overflow: hidden;
+}

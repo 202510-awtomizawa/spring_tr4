@@ -11,6 +11,7 @@
     th { background: #2884fc; color: #ffffff; }
     .actions form { display: inline; }
     .checkbox-cell { text-align: center; width: 40px; }
+    .title-cell { text-align: left; width: 70%; }
     .message { margin: 12px 0; color: #666; }
     .no-data { text-align: center; }
     .completed-row { background: #E2E8F0; color: #64748B; }
@@ -147,6 +148,7 @@
       border-right: 1px solid #e5e7eb;
       padding: 24px 12px;
       box-sizing: border-box;
+      transition: width 0.2s ease;
     }
     .sidebar-title {
       font-weight: bold;
@@ -186,46 +188,57 @@
     .has-sidebar .main-content {
       margin-left: 220px;
     }
+    .sidebar.sidebar-collapsed { width: 56px; }
+    .sidebar.sidebar-collapsed .sidebar-title { display: none; }
+    .sidebar.sidebar-collapsed .sidebar-text { display: none; }
+    .sidebar.sidebar-collapsed .sidebar-link { justify-content: center; }
+    .sidebar.sidebar-collapsed ~ .main-content { margin-left: 76px; }
+    .sidebar:not(.sidebar-collapsed) .sidebar-toggle {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
   </style>
 </head>
 <body th:classappend="${bulk} ? 'bulk-mode' : 'has-sidebar'">
   <aside class="sidebar" th:if="${!bulk}">
+    <button class="sidebar-toggle" type="button" aria-label="サイドバー切替">≡</button>
     <div class="sidebar-title">メニュー</div>
     <ul class="sidebar-menu">
       <li class="sidebar-item">
         <button class="sidebar-link" type="button" id="search-toggle" title="検索" aria-label="検索">
           <span class="sidebar-icon">🔍</span>
-          <span>検索</span>
+          <span class="sidebar-text">検索</span>
         </button>
       </li>
       <li class="sidebar-item">
         <a class="sidebar-link" th:href="@{/todos(bulk=true)}" title="一括削除モード" aria-label="一括削除モード">
           <span class="sidebar-icon">🗑</span>
-          <span>一括削除</span>
+          <span class="sidebar-text">一括削除</span>
         </a>
       </li>
       <li class="sidebar-item">
         <a class="sidebar-link" th:href="@{/categories}" title="カテゴリ編集" aria-label="カテゴリ編集">
           <span class="sidebar-icon">🏷</span>
-          <span>カテゴリ編集</span>
+          <span class="sidebar-text">カテゴリ編集</span>
         </a>
       </li>
       <li class="sidebar-item">
         <a class="sidebar-link" th:href="@{/todos/export/csv}" title="CSVダウンロード" aria-label="CSVダウンロード">
           <span class="sidebar-icon">⬇</span>
-          <span>CSVダウンロード</span>
+          <span class="sidebar-text">CSVダウンロード</span>
         </a>
       </li>
       <li class="sidebar-item" sec:authorize="isAuthenticated()">
         <a class="sidebar-link" th:href="@{/logout}" title="ログアウト" aria-label="ログアウト">
           <span class="sidebar-icon">👤</span>
-          <span>ログアウト</span>
+          <span class="sidebar-text">ログアウト</span>
         </a>
       </li>
       <li class="sidebar-item" sec:authorize="isAnonymous()">
         <a class="sidebar-link" th:href="@{/login}" title="ログイン" aria-label="ログイン">
           <span class="sidebar-icon">👤</span>
-          <span>ログイン</span>
+          <span class="sidebar-text">ログイン</span>
         </a>
       </li>
     </ul>
@@ -303,17 +316,7 @@
       <thead>
         <tr>
           <th th:if="${bulk}">削除</th>
-          <th></th>
-          <th>No</th>
           <th>タイトル</th>
-          <th>作成者</th>
-          <th>カテゴリ</th>
-          <th>優先度</th>
-          <th>期限</th>
-          <th>状態</th>
-          <th>作成日</th>
-          <th>更新日</th>
-          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -323,35 +326,13 @@
           <td th:if="${bulk}" class="checkbox-cell">
             <input class="bulk-select" type="checkbox" name="ids" th:value="${todo.id}" form="bulk-form">
           </td>
-          <td class="checkbox-cell">
+          <td class="checkbox-cell" th:if="${!bulk}">
             <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
               <input type="checkbox" th:checked="${todo.completed}" onchange="this.form.submit()">
               <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             </form>
           </td>
-          <td th:text="${stat.count}">1</td>
-          <td th:text="${todo.title}">タイトル</td>
-          <td th:text="${todo.author}">作成者</td>
-          <td>
-            <span class="category-badge"
-                  th:if="${todo.category != null && todo.category.id != null}"
-                  th:text="${todo.category.name}"
-                  th:style="'background:' + ${todo.category.color} + ';'"></span>
-            <span th:if="${todo.category == null || todo.category.id == null}">未分類</span>
-          </td>
-          <td>
-            <span class="priority-badge"
-                  th:text="${todo.priority.displayName}"
-                  th:classappend="' ' + ${todo.priority.cssClass}"></span>
-          </td>
-          <td th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
-              th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
-          <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
-          <td th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
-          <td th:text="${#temporals.format(todo.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
-          <td class="actions">
-            <a th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a>
-          </td>
+          <td class="title-cell" th:text="${todo.title}">タイトル</td>
         </tr>
       </tbody>
     </table>
@@ -362,6 +343,7 @@
   </div>
   </div>
 
+  <script th:src="@{/sidebar.js}"></script>
   <script th:if="${bulk}">
     const bulkCount = document.getElementById('bulk-count');
     const selectAllBtn = document.getElementById('bulk-select-all');
