@@ -1,24 +1,52 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
   <meta charset="UTF-8">
   <title>ToDo一覧</title>
   <link rel="stylesheet" th:href="@{/style.css}">
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background: #2884fc; color: #ffffff; }
-    .actions form { display: inline; }
-    .checkbox-cell { text-align: center; width: 40px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #2884fc;
+      color: #ffffff;
+    }
+
+    .actions form {
+      display: inline;
+    }
+
+    .checkbox-cell {
+      text-align: center;
+      width: 40px;
+    }
+
     .title-cell {
       text-align: left;
       width: 70%;
     }
+
     .task-title-wrap {
       display: flex;
       align-items: center;
     }
+
     .task-check {
       width: 48px;
       min-width: 48px;
@@ -28,16 +56,19 @@
       justify-content: center;
       margin-right: 1em;
     }
+
     .custom-check-input {
       position: absolute;
       opacity: 0;
       pointer-events: none;
     }
+
     .custom-check-label {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
     }
+
     .custom-check-label::before {
       content: "";
       width: 20px;
@@ -53,22 +84,49 @@
       box-sizing: border-box;
       background: transparent;
     }
-    .custom-check-input:checked + .custom-check-label::before {
+
+    .custom-check-input:checked+.custom-check-label::before {
       content: "✔";
     }
-    .col-hidden { display: none; }
-    .message { margin: 12px 0; color: #666; }
-    .no-data { text-align: center; }
-    .completed-row { background: #E2E8F0; color: #64748B; }
-    .incomplete-row { background: #FFFFFF; }
+
+    .col-hidden {
+      display: none;
+    }
+
+    .message {
+      margin: 12px 0;
+      color: #666;
+    }
+
+    .no-data {
+      text-align: center;
+    }
+
+    .completed-row {
+      background: #E2E8F0;
+      color: #64748B;
+    }
+
+    .incomplete-row {
+      background: #FFFFFF;
+    }
+
     .completed-row td.deadline-overdue,
     .completed-row td.deadline-today,
     .completed-row td.deadline-soon {
       background: #E2E8F0;
       color: #64748B;
     }
-    .bulk-mode { background: #fff5f5; }
-    tr.bulk-selected { outline: 2px solid #E53935; outline-offset: -2px; }
+
+    .bulk-mode {
+      background: #fff5f5;
+    }
+
+    tr.bulk-selected {
+      outline: 2px solid #E53935;
+      outline-offset: -2px;
+    }
+
     .bulk-header {
       display: flex;
       align-items: center;
@@ -78,8 +136,17 @@
       background: #fffafa;
       margin: 12px 0;
     }
-    .bulk-actions { display: flex; gap: 8px; align-items: center; }
-    .bulk-count { font-weight: bold; }
+
+    .bulk-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .bulk-count {
+      font-weight: bold;
+    }
+
     .icon-btn {
       display: inline-flex;
       align-items: center;
@@ -91,7 +158,11 @@
       color: #444;
       text-decoration: none;
     }
-    .icon-btn:hover { background: #e3e3e3; }
+
+    .icon-btn:hover {
+      background: #e3e3e3;
+    }
+
     .new-todo-btn {
       display: inline-flex;
       align-items: center;
@@ -106,13 +177,18 @@
       text-decoration: none;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     }
-    .new-todo-btn:hover { background: #1D4ED8; }
+
+    .new-todo-btn:hover {
+      background: #1D4ED8;
+    }
+
     .new-todo-wrap {
       display: flex;
       justify-content: flex-end;
       margin-top: 16px;
       padding-right: 40px;
     }
+
     .category-badge {
       display: inline-flex;
       align-items: center;
@@ -123,6 +199,7 @@
       font-size: 12px;
       font-weight: bold;
     }
+
     .priority-badge {
       display: inline-flex;
       align-items: center;
@@ -132,14 +209,20 @@
       font-size: 12px;
       font-weight: bold;
     }
-    .page-header { text-align: center; }
+
+    .page-header {
+      text-align: center;
+    }
+
     .todo-header-card {
       background: transparent;
       border: 0;
       padding: 0;
       margin-bottom: 12px;
       box-shadow: none;
+      display: none;
     }
+
     .todo-header-title {
       display: inline-flex;
       align-items: center;
@@ -151,9 +234,35 @@
       border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
     }
+
+    .todo-header-title span {
+      font-size: 36px;
+      font-weight: 600;
+
+
+    }
+
     .todo-header-icon {
       font-size: 20px;
     }
+
+    .main-content {
+      padding: 0;
+    }
+
+    .main-header-bar {
+      height: 108px;
+      background: #0000FF;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 24px;
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+      color: #ffffff;
+    }
+
     .icon-group {
       display: inline-flex;
       align-items: center;
@@ -161,6 +270,7 @@
       position: absolute;
       right: 0;
     }
+
     .csv-btn {
       display: inline-flex;
       align-items: center;
@@ -173,9 +283,19 @@
       text-decoration: none;
       font-size: 13px;
     }
-    .csv-btn:hover { background: #eef2f7; }
-    #search-panel { display: none; }
-    #search-panel.open { display: block; }
+
+    .csv-btn:hover {
+      background: #eef2f7;
+    }
+
+    #search-panel {
+      display: none;
+    }
+
+    #search-panel.open {
+      display: block;
+    }
+
     .todo-table-card {
       background: #ffffff;
       border-radius: 8px;
@@ -183,6 +303,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
       box-sizing: border-box;
     }
+
     .sidebar {
       position: fixed;
       top: 0;
@@ -195,10 +316,12 @@
       box-sizing: border-box;
       transition: width 0.2s ease;
     }
+
     .sidebar-title {
       font-weight: bold;
       margin-bottom: 12px;
     }
+
     .sidebar-menu {
       list-style: none;
       padding: 0;
@@ -207,7 +330,11 @@
       flex-direction: column;
       gap: 6px;
     }
-    .sidebar-item { margin: 0; }
+
+    .sidebar-item {
+      margin: 0;
+    }
+
     .sidebar-link {
       display: inline-flex;
       align-items: center;
@@ -222,22 +349,41 @@
       cursor: pointer;
       font-size: 14px;
     }
+
     .sidebar-link:hover {
       background: #eef2f7;
       border-color: #d1d5db;
     }
+
     .sidebar-icon {
       width: 20px;
       text-align: center;
     }
+
     .has-sidebar .main-content {
-      margin-left: 220px;
+      margin-left: 200px;
     }
-    .sidebar.sidebar-collapsed { width: 56px; }
-    .sidebar.sidebar-collapsed .sidebar-title { display: none; }
-    .sidebar.sidebar-collapsed .sidebar-text { display: none; }
-    .sidebar.sidebar-collapsed .sidebar-link { justify-content: center; }
-    .sidebar.sidebar-collapsed ~ .main-content { margin-left: 76px; }
+
+    .sidebar.sidebar-collapsed {
+      width: 56px;
+    }
+
+    .sidebar.sidebar-collapsed .sidebar-title {
+      display: none;
+    }
+
+    .sidebar.sidebar-collapsed .sidebar-text {
+      display: none;
+    }
+
+    .sidebar.sidebar-collapsed .sidebar-link {
+      justify-content: center;
+    }
+
+    .sidebar.sidebar-collapsed~.main-content {
+      margin-left: 56px;
+    }
+
     .sidebar:not(.sidebar-collapsed) .sidebar-toggle {
       position: absolute;
       top: 12px;
@@ -245,6 +391,7 @@
     }
   </style>
 </head>
+
 <body th:classappend="${bulk} ? 'bulk-mode' : 'has-sidebar'">
   <aside class="sidebar" th:if="${!bulk}">
     <button class="sidebar-toggle" type="button" aria-label="サイドバー切替">≡</button>
@@ -290,122 +437,122 @@
   </aside>
 
   <div class="main-content">
+    <div class="main-header-bar">ToDoリスト</div>
     <div class="page-header todo-header-card">
       <h1 class="todo-header-title"><span class="todo-header-icon">📋</span>ToDo一覧</h1>
     </div>
 
-  <div id="search-panel"
-       th:if="${!bulk}"
-       th:classappend="${(q != null && q != '') or categoryId != null or priority != null or sort != 'createdAt' or dir != 'desc'} ? ' open' : ''">
-    <form id="search-form" method="get" th:action="@{/todos}">
-      <label>検索:
-        <input type="text" name="q" th:value="${q}">
-      </label>
-      <label>並び替え:
-        <select name="sort" th:value="${sort}">
-          <option value="createdAt" th:selected="${sort == 'createdAt'}">作成日</option>
-          <option value="updatedAt" th:selected="${sort == 'updatedAt'}">更新日</option>
-          <option value="title" th:selected="${sort == 'title'}">タイトル</option>
-          <option value="author" th:selected="${sort == 'author'}">作成者</option>
-        <option value="completed" th:selected="${sort == 'completed'}">状態</option>
-        <option value="priority" th:selected="${sort == 'priority'}">優先度</option>
-        <option value="deadline" th:selected="${sort == 'deadline'}">期限</option>
-      </select>
-    </label>
-      <label>順序:
-        <select name="dir" th:value="${dir}">
-          <option value="asc" th:selected="${dir == 'asc'}">昇順</option>
-          <option value="desc" th:selected="${dir == 'desc'}">降順</option>
-        </select>
-      </label>
-      <label>カテゴリ:
-        <select name="categoryId">
-          <option value="" th:selected="${categoryId == null}">すべて</option>
-          <option th:each="cat : ${categories}"
-                  th:value="${cat.id}"
-                  th:text="${cat.name}"
-                  th:selected="${categoryId != null && categoryId == cat.id}"></option>
-        </select>
-      </label>
-      <label>優先度:
-        <select name="priority">
-          <option value="" th:selected="${priority == null}">すべて</option>
-          <option th:each="p : ${priorities}"
-                  th:value="${p}"
-                  th:text="${p.displayName}"
-                  th:selected="${priority != null && priority == p}"></option>
-        </select>
-      </label>
-      <a th:href="@{/todos}">クリア</a>
-    </form>
-  </div>
-
-  <form id="bulk-form" method="post" th:if="${bulk}" th:action="@{/todos/bulk/confirm}">
-    <div class="bulk-header">
-      <span>🗑 一括削除モード</span>
-      <a th:href="@{/todos}">一覧に戻る</a>
-      <span class="bulk-count"><span id="bulk-count">0</span>件選択中</span>
-      <div class="bulk-actions">
-        <button type="button" id="bulk-select-all">全選択</button>
-        <button type="button" id="bulk-clear">全解除</button>
-        <button type="submit">削除</button>
-      </div>
+    <div id="search-panel" th:if="${!bulk}"
+      th:classappend="${(q != null && q != '') or categoryId != null or priority != null or sort != 'createdAt' or dir != 'desc'} ? ' open' : ''">
+      <form id="search-form" method="get" th:action="@{/todos}">
+        <label>検索:
+          <input type="text" name="q" th:value="${q}">
+        </label>
+        <label>並び替え:
+          <select name="sort" th:value="${sort}">
+            <option value="createdAt" th:selected="${sort == 'createdAt'}">作成日</option>
+            <option value="updatedAt" th:selected="${sort == 'updatedAt'}">更新日</option>
+            <option value="title" th:selected="${sort == 'title'}">タイトル</option>
+            <option value="author" th:selected="${sort == 'author'}">作成者</option>
+            <option value="completed" th:selected="${sort == 'completed'}">状態</option>
+            <option value="priority" th:selected="${sort == 'priority'}">優先度</option>
+            <option value="deadline" th:selected="${sort == 'deadline'}">期限</option>
+          </select>
+        </label>
+        <label>順序:
+          <select name="dir" th:value="${dir}">
+            <option value="asc" th:selected="${dir == 'asc'}">昇順</option>
+            <option value="desc" th:selected="${dir == 'desc'}">降順</option>
+          </select>
+        </label>
+        <label>カテゴリ:
+          <select name="categoryId">
+            <option value="" th:selected="${categoryId == null}">すべて</option>
+            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+              th:selected="${categoryId != null && categoryId == cat.id}"></option>
+          </select>
+        </label>
+        <label>優先度:
+          <select name="priority">
+            <option value="" th:selected="${priority == null}">すべて</option>
+            <option th:each="p : ${priorities}" th:value="${p}" th:text="${p.displayName}"
+              th:selected="${priority != null && priority == p}"></option>
+          </select>
+        </label>
+        <a th:href="@{/todos}">クリア</a>
+      </form>
     </div>
-    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-  </form>
 
-  <div th:if="${#lists.isEmpty(todos)}" class="message no-data">データはありません</div>
+    <form id="bulk-form" method="post" th:if="${bulk}" th:action="@{/todos/bulk/confirm}">
+      <div class="bulk-header">
+        <span>🗑 一括削除モード</span>
+        <a th:href="@{/todos}">一覧に戻る</a>
+        <span class="bulk-count"><span id="bulk-count">0</span>件選択中</span>
+        <div class="bulk-actions">
+          <button type="button" id="bulk-select-all">全選択</button>
+          <button type="button" id="bulk-clear">全解除</button>
+          <button type="submit">削除</button>
+        </div>
+      </div>
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
 
-  <div class="todo-table-card" th:if="${!#lists.isEmpty(todos)}">
-    <table class="todo-table">
-      <tbody>
-        <tr th:each="todo, stat : ${todos}"
-            th:class="${todo.completed} ? 'completed-row' : 'incomplete-row'"
+    <div th:if="${#lists.isEmpty(todos)}" class="message no-data">データはありません</div>
+
+    <div class="todo-table-card" th:if="${!#lists.isEmpty(todos)}">
+      <table class="todo-table">
+        <tbody>
+          <tr th:each="todo, stat : ${todos}" th:class="${todo.completed} ? 'completed-row' : 'incomplete-row'"
             th:classappend="${bulk} ? ' bulk-row' : ''">
-          <td class="title-cell">
-            <div class="task-title-wrap">
-              <span class="task-check" th:if="${bulk}">
-                <input class="bulk-select" type="checkbox" name="ids" th:value="${todo.id}" form="bulk-form">
-              </span>
-              <span class="task-check" th:if="${!bulk}">
-                <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
-                  <input type="checkbox" th:checked="${todo.completed}" onchange="this.form.submit()">
-                  <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                </form>
-              </span>
-              <span th:text="${todo.title}">タイトル</span>
-            </div>
-          </td>
-          <td class="col-hidden" th:text="${stat.count}">1</td>
-          <td class="col-hidden" th:text="${todo.author}">作成者</td>
-          <td class="col-hidden">
-            <span class="category-badge"
-                  th:if="${todo.category != null && todo.category.id != null}"
-                  th:text="${todo.category.name}"
-                  th:style="'background:' + ${todo.category.color} + ';'"></span>
-            <span th:if="${todo.category == null || todo.category.id == null}">未分類</span>
-          </td>
-          <td class="col-hidden">
-            <span class="priority-badge"
-                  th:text="${todo.priority.displayName}"
-                  th:classappend="' ' + ${todo.priority.cssClass}"></span>
-          </td>
-          <td class="col-hidden" th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
+            <td class="title-cell">
+              <div class="task-title-wrap">
+                <span class="task-check" th:if="${bulk}">
+                  <input class="bulk-select custom-check-input" type="checkbox" name="ids" th:value="${todo.id}"
+                    form="bulk-form" th:id="'bulk-' + ${todo.id}">
+                  <label class="custom-check-label" th:for="'bulk-' + ${todo.id}"></label>
+                </span>
+                <span class="task-check" th:if="${!bulk}">
+                  <form method="post" th:action="@{/todos/{id}/toggle(id=${todo.id})}">
+                    <input class="custom-check-input" type="checkbox" th:checked="${todo.completed}"
+                      onchange="this.form.submit()" th:id="'toggle-' + ${todo.id}">
+                    <label class="custom-check-label" th:for="'toggle-' + ${todo.id}"></label>
+                    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}">
+                  </form>
+                </span>
+                <span th:text="${todo.title}">タイトル</span>
+              </div>
+            </td>
+            <td class="col-hidden" th:text="${stat.count}">1</td>
+            <td class="col-hidden" th:text="${todo.author}">作成者</td>
+            <td class="col-hidden">
+              <span class="category-badge" th:if="${todo.category != null && todo.category.id != null}"
+                th:text="${todo.category.name}" th:style="'background:' + ${todo.category.color} + ';'"></span>
+              <span th:if="${todo.category == null || todo.category.id == null}">未分類</span>
+            </td>
+            <td class="col-hidden">
+              <span class="priority-badge" th:text="${todo.priority.displayName}"
+                th:classappend="' ' + ${todo.priority.cssClass}"></span>
+            </td>
+            <td class="col-hidden"
+              th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
               th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
-          <td class="col-hidden" th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
-          <td class="col-hidden" th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
-          <td class="col-hidden" th:text="${#temporals.format(todo.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00</td>
-          <td class="col-hidden actions">
-            <a th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <td class="col-hidden" th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
+            <td class="col-hidden" th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00
+            </td>
+            <td class="col-hidden" th:text="${#temporals.format(todo.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00
+            </td>
+            <td class="col-hidden actions">
+              <a th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="new-todo-wrap" th:if="${!bulk}">
-    <a class="new-todo-btn" th:href="@{/todos/new}" title="新規登録" aria-label="新規登録">＋</a>
-  </div>
+    <div class="new-todo-wrap" th:if="${!bulk}">
+      <a class="new-todo-btn" th:href="@{/todos/new}" title="新規登録" aria-label="新規登録">＋</a>
+    </div>
   </div>
 
   <script th:src="@{/sidebar.js}"></script>
@@ -495,4 +642,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -160,6 +160,10 @@
 }
 
 .todo-table {
-  width: 450%;
+  width: 150%;
   margin: 0 auto;
+}
+
+.page-title {
+  display: none;
 }
