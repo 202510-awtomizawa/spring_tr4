@@ -31,6 +31,9 @@
     .actions form {
       display: inline;
     }
+    td.actions {
+      text-align: right;
+    }
 
     .checkbox-cell {
       text-align: center;
@@ -92,6 +95,11 @@
     .col-hidden {
       display: none;
     }
+
+    td.actions.col-hidden {
+      display: table-cell !important;
+    }
+
 
     .message {
       margin: 12px 0;
@@ -612,6 +620,7 @@
                   </form>
                 </span>
                 <span th:text="${todo.title}">タイトル</span>
+                <a class="todo-edit-btn" th:href="@{/todos/{id}/edit(id=${todo.id})}">編集</a>
               </div>
             </td>
             <td class="col-hidden" th:text="${stat.count}">1</td>

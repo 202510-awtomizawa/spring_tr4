@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>???????????</title>
+  <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+  <style>
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+    }
+
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-item:hover {
+      background: #f8f9fa;
+    }
+
+    .icon-item .material-icons {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .icon-name {
+      font-size: 11px;
+      color: #6c757d;
+      text-align: center;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="icon-grid">
+    <div class="icon-item" title="?????">
+      <span class="material-icons">content_copy</span>
+      <span class="icon-name">content_copy</span>
+    </div>
+    <div class="icon-item" title="??????">
+      <span class="material-icons">content_paste</span>
+      <span class="icon-name">content_paste</span>
+    </div>
+    <div class="icon-item" title="??">
+      <span class="material-icons">save</span>
+      <span class="icon-name">save</span>
+    </div>
+    <div class="icon-item" title="????/??????">
+      <span class="material-icons">folder</span>
+      <span class="icon-name">folder</span>
+    </div>
+    <div class="icon-item" title="??????">
+      <span class="material-icons">file_copy</span>
+      <span class="icon-name">file_copy</span>
+    </div>
+    <div class="icon-item" title="??????">
+      <span class="material-icons">description</span>
+      <span class="icon-name">description</span>
+    </div>
+    <div class="icon-item" title="??????????">
+      <span class="material-icons">cloud_upload</span>
+      <span class="icon-name">cloud_upload</span>
+    </div>
+    <div class="icon-item" title="??????????">
+      <span class="material-icons">cloud_download</span>
+      <span class="icon-name">cloud_download</span>
+    </div>
+  </div>
+</body>
+</html>
