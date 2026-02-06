@@ -1,90 +1,212 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>ToDo登録</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .todo-form-page h1 { text-align: center; }
-    .todo-form-page form { text-align: center; }
-    .todo-form-page table { border-collapse: collapse; margin: 0 auto; }
-    .todo-form-page th, .todo-form-page td { padding: 8px; border: 1px solid #ccc; }
-    .todo-form-page th { background: #f5f5f5; text-align: left; width: 140px; }
-    .todo-form-page input[type="text"],
-    .todo-form-page input[type="date"],
-    .todo-form-page textarea,
-    .todo-form-page select { text-align: center; }
-    .required { color: #c00; }
-    .error { color: #c00; }
+    body.todo-create-page {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7f9;
+    }
+
+    .todo-create-page .form-wrap {
+      max-width: 920px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .todo-create-page h1 {
+      text-align: center;
+      margin: 0 0 20px;
+      font-size: 26px;
+    }
+
+    .todo-create-page .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .todo-create-page .form-group { margin-bottom: 16px; }
+    .todo-create-page .form-label { display: block; margin-bottom: 6px; font-weight: 500; }
+
+    .todo-create-page .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .todo-create-page .form-control:focus {
+      border-color: #17a2b8;
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+      outline: none;
+    }
+
+    .todo-create-page .input-group {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .todo-create-page .input-group-text {
+      padding: 10px 12px;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      display: flex;
+      align-items: center;
+    }
+
+    .todo-create-page .input-group .form-control {
+      border-radius: 0 6px 6px 0;
+    }
+
+    .todo-create-page .radio-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .todo-create-page .form-radio {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .todo-create-page .file-upload {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      color: #6b7280;
+      background: #fafafa;
+    }
+
+    .todo-create-page .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .todo-create-page .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .todo-create-page .btn-primary {
+      background: #17a2b8;
+      color: #fff;
+    }
+
+    .todo-create-page .btn-primary:hover { filter: brightness(0.95); }
+
+    .todo-create-page .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .todo-create-page .required { color: #c00; }
+    .todo-create-page .error { color: #c00; font-size: 12px; margin-top: 4px; }
+    .todo-create-page .helper { color: #6b7280; font-size: 12px; margin-top: 6px; }
+
+    @media (max-width: 720px) {
+      .todo-create-page .form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="todo-form-page">
-  <h1>ToDo登録</h1>
+<body class="todo-create-page">
+  <div class="form-wrap">
+    <h1>ToDo登録</h1>
 
-  <form method="post" th:action="@{/todos/confirm}" th:object="${todo}">
-    <input type="hidden" th:field="*{id}">
-    <table>
-      <tr>
-        <th>作成者 <span class="required">必須</span></th>
-        <td>
-          <input type="text" th:field="*{author}">
+    <form method="post" th:action="@{/todos/confirm}" th:object="${todo}">
+      <input type="hidden" th:field="*{id}">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="author">作成者 <span class="required">必須</span></label>
+          <input class="form-control" type="text" th:field="*{author}" id="author" placeholder="作成者">
           <div class="error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
-        </td>
-      </tr>
-      <tr>
-        <th>タイトル <span class="required">必須</span></th>
-        <td>
-          <input type="text" th:field="*{title}">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="title">タイトル <span class="required">必須</span></label>
+          <input class="form-control" type="text" th:field="*{title}" id="title" placeholder="タイトル">
           <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-        </td>
-      </tr>
-      <tr>
-        <th>詳細</th>
-        <td>
-          <textarea rows="4" cols="40" th:field="*{detail}"></textarea>
-          <div class="error" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
-        </td>
-      </tr>
-      <tr>
-        <th>状態</th>
-        <td>
-          <label><input type="checkbox" th:field="*{completed}"> 完了</label>
-        </td>
-      </tr>
-      <tr>
-        <th>優先度</th>
-        <td>
-          <select th:field="*{priority}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="detail">詳細</label>
+        <textarea class="form-control" rows="4" th:field="*{detail}" id="detail" placeholder="詳細"></textarea>
+        <div class="error" th:if="${#fields.hasErrors('detail')}" th:errors="*{detail}"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">状態</label>
+          <div class="radio-group">
+            <label class="form-radio">
+              <input type="checkbox" th:field="*{completed}">
+              完了
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="priority">優先度</label>
+          <select class="form-control" th:field="*{priority}" id="priority">
             <option th:each="p : ${priorities}" th:value="${p}" th:text="${p.displayName}"></option>
           </select>
-        </td>
-      </tr>
-      <tr>
-        <th>期限</th>
-        <td>
-          <input type="date" th:field="*{deadline}"
-                 th:attr="min=${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
-        </td>
-      </tr>
-      <tr>
-        <th>カテゴリ</th>
-        <td>
-          <select th:field="*{category.id}">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="deadline">期限</label>
+          <div class="input-group">
+            <span class="input-group-text">📅</span>
+            <input class="form-control" type="date" th:field="*{deadline}" id="deadline"
+                   th:attr="min=${#temporals.format(#temporals.createToday(), 'yyyy-MM-dd')}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="category">カテゴリ</label>
+          <select class="form-control" th:field="*{category.id}" id="category">
             <option value="">未分類</option>
             <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
           </select>
-          <a th:href="@{/categories}" style="margin-left: 8px;">カテゴリ編集</a>
-        </td>
-      </tr>
-    </table>
-    <p>
-      <button type="submit">確認</button>
-      <a th:href="@{/todos}">戻る</a>
-    </p>
-  </form>
-  <form method="post" th:if="${todo.id != null}" th:action="@{/todos/{id}/delete(id=${todo.id})}" onsubmit="return confirm('削除しますか？');">
-    <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    <button type="submit">削除</button>
-  </form>
+          <div class="helper">
+            <a th:href="@{/categories}">カテゴリ編集</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" type="submit">確認</button>
+        <a class="btn btn-secondary" th:href="@{/todos}">戻る</a>
+      </div>
+    </form>
+
+    <form method="post" th:if="${todo.id != null}" th:action="@{/todos/{id}/delete(id=${todo.id})}" onsubmit="return confirm('削除しますか？');">
+      <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <div class="btn-group" style="margin-top: 16px;">
+        <button class="btn btn-secondary" type="submit">削除</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>

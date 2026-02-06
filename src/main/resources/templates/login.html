@@ -4,33 +4,85 @@
   <meta charset="UTF-8">
   <title>ログイン</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .login-page h1 { text-align: center; }
-    .login-page .login-box { max-width: 360px; padding: 16px; border: 1px solid #ddd; border-radius: 8px; margin: 0 auto; }
-    .login-page form { text-align: center; }
-    .row { margin-bottom: 12px; }
-    label { display: block; margin-bottom: 4px; }
-    input { width: 100%; padding: 8px; box-sizing: border-box; }
-    .error { color: #c00; margin-bottom: 8px; }
-    .message { color: #4b5563; margin-bottom: 8px; }
+    body.login-page {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7f9;
+    }
+    .login-page .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    .login-page h1 {
+      text-align: center;
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+    .login-page .login-box {
+      width: 100%;
+      max-width: 380px;
+      padding: 24px;
+      border: 1px solid #e6e6e6;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+    .login-page .form-group { margin-bottom: 16px; }
+    .login-page .form-label { display: block; margin-bottom: 6px; font-weight: 500; }
+    .login-page .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .login-page .form-control:focus {
+      border-color: #17a2b8;
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+      outline: none;
+    }
+    .login-page .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .login-page .btn-primary {
+      background: #17a2b8;
+      color: #ffffff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .login-page .btn-primary:hover { filter: brightness(0.95); }
+    .login-page .error { color: #c00; margin-bottom: 8px; }
+    .login-page .message { color: #4b5563; margin-bottom: 8px; }
   </style>
 </head>
 <body class="login-page">
-  <h1>ログイン</h1>
-  <div class="login-box">
-    <div class="error" th:if="${param.error}">ユーザー名またはパスワードが違います。</div>
-    <div class="message" th:if="${param.logout}">ログアウトしました。</div>
-    <form th:action="@{/login}" method="post">
-      <div class="row">
-        <label for="username">ユーザー名</label>
-        <input id="username" name="username" type="text" autofocus>
-      </div>
-      <div class="row">
-        <label for="password">パスワード</label>
-        <input id="password" name="password" type="password">
-      </div>
-      <button type="submit">ログイン</button>
-    </form>
+  <div class="login-wrap">
+    <div class="login-box">
+      <h1>ログイン</h1>
+      <div class="error" th:if="${param.error}">ユーザー名またはパスワードが違います。</div>
+      <div class="message" th:if="${param.logout}">ログアウトしました。</div>
+      <form th:action="@{/login}" method="post">
+        <div class="form-group">
+          <label class="form-label" for="username">ユーザー名</label>
+          <input class="form-control" id="username" name="username" type="text" placeholder="ユーザー名" autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">パスワード</label>
+          <input class="form-control" id="password" name="password" type="password" placeholder="パスワード">
+        </div>
+        <button class="btn btn-primary" type="submit">ログイン</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>
