@@ -82,7 +82,7 @@ public class TodoService {
       });
     }
     if (todo.getPriority() == null) {
-      todo.setPriority(Priority.MEDIUM);
+      todo.setPriority(Priority.NONE);
     }
     normalizeCategory(todo);
     return todoRepository.save(todo);

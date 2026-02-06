@@ -167,8 +167,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 72px;
-      height: 72px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
       background: #2964E6;
       color: #E0F2FE;
@@ -184,9 +184,11 @@
 
     .new-todo-wrap {
       display: flex;
-      justify-content: flex-end;
-      margin-top: 16px;
-      padding-right: 40px;
+      align-items: center;
+      margin-left: auto;
+      margin-right: 45px;
+      margin-top: 0;
+      padding-right: 0;
     }
 
     .category-badge {
@@ -267,6 +269,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .icon-group {
@@ -316,6 +319,23 @@
 
     .todo-table td {
       vertical-align: middle;
+    }
+
+    .todo-table tr.priority-high td:first-child {
+      border-left: 4px solid #dc3545;
+    }
+
+    .todo-table tr.priority-medium td:first-child {
+      border-left: 4px solid #ffc107;
+    }
+
+    .todo-table tr.priority-low td:first-child {
+      border-left: 4px solid #17a2b8;
+    }
+
+    .todo-table .title-cell,
+    .todo-table .title-cell * {
+      color: #000;
     }
 
     .sidebar {
@@ -503,7 +523,12 @@
   </aside>
 
   <div class="main-content">
-    <div class="main-header-bar">ToDoリスト</div>
+    <div class="main-header-bar">
+      <span>ToDoリスト</span>
+      <div class="new-todo-wrap" th:if="${!bulk}">
+        <a class="new-todo-btn" th:href="@{/todos/new}" title="新規登録" aria-label="新規登録">＋</a>
+      </div>
+    </div>
     <div class="page-header todo-header-card">
       <h1 class="todo-header-title"><span class="todo-header-icon">📋</span>ToDo一覧</h1>
     </div>
@@ -569,7 +594,7 @@
       <table class="todo-table">
         <tbody>
           <tr th:each="todo, stat : ${todos}" th:class="${todo.completed} ? 'completed-row' : 'incomplete-row'"
-            th:classappend="${bulk} ? ' bulk-row' : ''">
+            th:classappend="${(bulk ? ' bulk-row' : '') + ((todo.priority != null and todo.priority != T(com.example.todo.entity.Priority).NONE) ? ' ' + todo.priority.cssClass : '')}">
             <td class="title-cell">
               <div class="task-title-wrap">
                 <span class="task-check" th:if="${bulk}">
@@ -633,9 +658,6 @@
         th:href="@{/todos(page=${page.number + 1}, size=${page.size}, q=${q}, categoryId=${categoryId}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk})}">次へ</a>
     </div>
 
-    <div class="new-todo-wrap" th:if="${!bulk}">
-      <a class="new-todo-btn" th:href="@{/todos/new}" title="新規登録" aria-label="新規登録">＋</a>
-    </div>
   </div>
 
   <script th:src="@{/sidebar.js}"></script>

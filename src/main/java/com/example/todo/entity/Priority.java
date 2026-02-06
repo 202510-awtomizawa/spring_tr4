@@ -1,9 +1,10 @@
 package com.example.todo.entity;
 
 public enum Priority {
-  HIGH("高", "#ef4444"),
-  MEDIUM("中", "#f59e0b"),
-  LOW("低", "#22c55e");
+  HIGH("\u9ad8", "#ef4444"),
+  MEDIUM("\u4e2d", "#f59e0b"),
+  LOW("\u4f4e", "#22c55e"),
+  NONE("\u306a\u3057", "#9ca3af");
 
   private final String displayName;
   private final String color;

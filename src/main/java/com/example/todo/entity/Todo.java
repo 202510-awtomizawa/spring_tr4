@@ -48,7 +48,7 @@ public class Todo {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 10)
-  private Priority priority = Priority.MEDIUM;
+  private Priority priority = Priority.NONE;
 
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @Column
@@ -78,7 +78,7 @@ public class Todo {
       updatedAt = now;
     }
     if (priority == null) {
-      priority = Priority.MEDIUM;
+      priority = Priority.NONE;
     }
   }
 
@@ -86,14 +86,14 @@ public class Todo {
   public void preUpdate() {
     updatedAt = LocalDateTime.now();
     if (priority == null) {
-      priority = Priority.MEDIUM;
+      priority = Priority.NONE;
     }
   }
 
   @PostLoad
   public void postLoad() {
     if (priority == null) {
-      priority = Priority.MEDIUM;
+      priority = Priority.NONE;
     }
   }
 
