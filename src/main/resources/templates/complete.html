@@ -94,7 +94,8 @@
     </div>
     <div class="form-group">
       <label class="form-label" th:text="#{label.status}">状態</label>
-      <div class="form-control readonly" th:text="${todo.completed} ? #messages.msg('status.done') : #messages.msg('status.todo')">未完了</div>
+      <div class="form-control readonly" th:if="${todo.completed == true}" th:text="#{status.done}">完了</div>
+      <div class="form-control readonly" th:unless="${todo.completed == true}" th:text="#{status.todo}">未完了</div>
     </div>
     <div class="form-group">
       <label class="form-label" th:text="#{label.priority}">優先度</label>

@@ -201,7 +201,9 @@
       </div>
     </form>
 
-    <form method="post" th:if="${todo.id != null}" th:action="@{/todos/{id}/delete(id=${todo.id})}" onsubmit="return confirm('削除しますか？');" th:attr="onsubmit=|return confirm('${#messages.msg(\"confirm.delete\")}')|">
+    <form method="post" th:if="${todo.id != null}" th:action="@{/todos/{id}/delete(id=${todo.id})}"
+      onsubmit="return confirm('削除しますか？');"
+      th:attr="onsubmit=|return confirm('${#messages.msg(\"confirm.delete\")}')|">
       <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
       <div class="btn-group" style="margin-top: 16px;">
         <button class="btn btn-secondary" type="submit" th:text="#{button.delete}">削除</button>

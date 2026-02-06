@@ -102,7 +102,11 @@ public class TodoController {
 
   @GetMapping("/new")
   public String createForm(Model model) {
-    model.addAttribute("todo", new Todo());
+    Todo todo = new Todo();
+    if (todo.getCategory() == null) {
+      todo.setCategory(new Category());
+    }
+    model.addAttribute("todo", todo);
     return "create";
   }
 
@@ -113,6 +117,9 @@ public class TodoController {
 
   @PostMapping("/confirm")
   public String confirm(@Valid @ModelAttribute("todo") Todo todo, BindingResult result) {
+    if (todo.getCategory() == null) {
+      todo.setCategory(new Category());
+    }
     if (result.hasErrors()) {
       return "create";
     }
@@ -121,9 +128,15 @@ public class TodoController {
 
   @PostMapping
   public String save(@ModelAttribute("todo") Todo todo,
+      @RequestParam(name = "categoryId", required = false) Long categoryId,
       RedirectAttributes redirectAttributes,
       @AuthenticationPrincipal UserDetails userDetails) {
     AppUser user = getCurrentUser(userDetails);
+    if (categoryId != null) {
+      categoryService.findById(categoryId).ifPresent(todo::setCategory);
+    } else {
+      todo.setCategory(null);
+    }
     Todo saved = todoService.saveForUser(todo, user);
     redirectAttributes.addAttribute("id", saved.getId());
     return "redirect:/todos/complete";
