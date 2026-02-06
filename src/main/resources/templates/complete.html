@@ -1,52 +1,117 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>ToDo完了</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .todo-complete-page h1 { text-align: center; }
-    .todo-complete-page table { border-collapse: collapse; margin: 0 auto; }
-    .todo-complete-page th, .todo-complete-page td { padding: 8px; border: 1px solid #ccc; text-align: center; }
-    .todo-complete-page th { background: #f5f5f5; width: 140px; }
-    .todo-complete-page p { text-align: center; }
+    body.todo-complete-page {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7f9;
+    }
+
+    .todo-complete-page .complete-card {
+      max-width: 720px;
+      margin: 24px auto;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .todo-complete-page h1 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .todo-complete-page .lead {
+      text-align: center;
+      margin: 0 0 20px;
+      color: #4b5563;
+    }
+
+    .todo-complete-page .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+
+    .todo-complete-page .form-control.readonly {
+      background: #f9fafb;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+    }
+
+    .todo-complete-page .form-control.textarea-like {
+      min-height: 96px;
+      align-items: flex-start;
+      white-space: pre-wrap;
+    }
+
+    .todo-complete-page .form-label { display: block; margin-bottom: 6px; font-weight: 500; }
+    .todo-complete-page .form-group { margin-bottom: 16px; }
+
+    .todo-complete-page .btn-primary {
+      background: #17a2b8;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 6px;
+      border: none;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .todo-complete-page .btn-primary:hover { filter: brightness(0.95); }
+
+    .todo-complete-page .actions {
+      text-align: center;
+      margin-top: 16px;
+    }
   </style>
 </head>
 <body class="todo-complete-page">
-  <h1>ToDo完了</h1>
-  <p>上記で登録しました。</p>
+  <div class="complete-card">
+    <h1>ToDo完了</h1>
+    <p class="lead">上記で登録しました。</p>
 
-  <table>
-    <tr>
-      <th>作成者</th>
-      <td th:text="${todo.author}">作成者</td>
-    </tr>
-    <tr>
-      <th>タイトル</th>
-      <td th:text="${todo.title}">タイトル</td>
-    </tr>
-    <tr>
-      <th>詳細</th>
-      <td th:text="${todo.detail}">詳細</td>
-    </tr>
-    <tr>
-      <th>状態</th>
-      <td th:text="${todo.completed ? '完了' : '未完了'}">未完了</td>
-    </tr>
-    <tr>
-      <th>優先度</th>
-      <td th:text="${todo.priority.displayName}">中</td>
-    </tr>
-    <tr>
-      <th>期限</th>
-      <td th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
-    </tr>
-    <tr>
-      <th>カテゴリ</th>
-      <td th:text="${(todo.category != null && todo.category.id != null) ? todo.category.name : '未分類'}">未分類</td>
-    </tr>
-  </table>
+    <div class="form-group">
+      <label class="form-label">作成者</label>
+      <div class="form-control readonly" th:text="${todo.author}">作成者</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">タイトル</label>
+      <div class="form-control readonly" th:text="${todo.title}">タイトル</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">詳細</label>
+      <div class="form-control readonly textarea-like" th:text="${todo.detail}">詳細</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">状態</label>
+      <div class="form-control readonly" th:text="${todo.completed ? '完了' : '未完了'}">未完了</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">優先度</label>
+      <div class="form-control readonly" th:text="${todo.priority.displayName}">中</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">期限</label>
+      <div class="form-control readonly" th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">カテゴリ</label>
+      <div class="form-control readonly" th:text="${(todo.category != null && todo.category.id != null) ? todo.category.name : '未分類'}">未分類</div>
+    </div>
 
-  <p><a th:href="@{/todos}">一覧へ</a></p>
+    <div class="actions">
+      <a class="btn-primary" th:href="@{/todos}">一覧へ</a>
+    </div>
+  </div>
 </body>
 </html>
