@@ -18,26 +18,22 @@ import com.example.todo.entity.Todo;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
   @EntityGraph(attributePaths = "category")
-  @Query("""
-      select t from Todo t
-      left join t.category c
-      where (:keyword is null or :keyword = ''
-          or lower(t.title) like lower(concat('%', :keyword, '%'))
-          or lower(t.author) like lower(concat('%', :keyword, '%')))
-        and (:categoryId is null or c.id = :categoryId)
-        and (:priority is null or t.priority = :priority)
-        and (t.user = :user)
-      """,
-      countQuery = """
-      select count(t) from Todo t
-      left join t.category c
-      where (:keyword is null or :keyword = ''
-          or lower(t.title) like lower(concat('%', :keyword, '%'))
-          or lower(t.author) like lower(concat('%', :keyword, '%')))
-        and (:categoryId is null or c.id = :categoryId)
-        and (:priority is null or t.priority = :priority)
-        and (t.user = :user)
-      """)
+  @Query(value = "select t from Todo t " +
+      "left join t.category c " +
+      "where (:keyword is null or :keyword = '' " +
+      "  or lower(t.title) like lower(concat('%', :keyword, '%')) " +
+      "  or lower(t.author) like lower(concat('%', :keyword, '%'))) " +
+      "and (:categoryId is null or c.id = :categoryId) " +
+      "and (:priority is null or t.priority = :priority) " +
+      "and (t.user = :user)",
+      countQuery = "select count(t) from Todo t " +
+      "left join t.category c " +
+      "where (:keyword is null or :keyword = '' " +
+      "  or lower(t.title) like lower(concat('%', :keyword, '%')) " +
+      "  or lower(t.author) like lower(concat('%', :keyword, '%'))) " +
+      "and (:categoryId is null or c.id = :categoryId) " +
+      "and (:priority is null or t.priority = :priority) " +
+      "and (t.user = :user)")
   Page<Todo> search(
       @Param("keyword") String keyword,
       @Param("categoryId") Long categoryId,
@@ -46,24 +42,20 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
       Pageable pageable);
 
   @EntityGraph(attributePaths = "category")
-  @Query("""
-      select t from Todo t
-      left join t.category c
-      where (:keyword is null or :keyword = ''
-          or lower(t.title) like lower(concat('%', :keyword, '%'))
-          or lower(t.author) like lower(concat('%', :keyword, '%')))
-        and (:categoryId is null or c.id = :categoryId)
-        and (:priority is null or t.priority = :priority)
-      """,
-      countQuery = """
-      select count(t) from Todo t
-      left join t.category c
-      where (:keyword is null or :keyword = ''
-          or lower(t.title) like lower(concat('%', :keyword, '%'))
-          or lower(t.author) like lower(concat('%', :keyword, '%')))
-        and (:categoryId is null or c.id = :categoryId)
-        and (:priority is null or t.priority = :priority)
-      """)
+  @Query(value = "select t from Todo t " +
+      "left join t.category c " +
+      "where (:keyword is null or :keyword = '' " +
+      "  or lower(t.title) like lower(concat('%', :keyword, '%')) " +
+      "  or lower(t.author) like lower(concat('%', :keyword, '%'))) " +
+      "and (:categoryId is null or c.id = :categoryId) " +
+      "and (:priority is null or t.priority = :priority)",
+      countQuery = "select count(t) from Todo t " +
+      "left join t.category c " +
+      "where (:keyword is null or :keyword = '' " +
+      "  or lower(t.title) like lower(concat('%', :keyword, '%')) " +
+      "  or lower(t.author) like lower(concat('%', :keyword, '%'))) " +
+      "and (:categoryId is null or c.id = :categoryId) " +
+      "and (:priority is null or t.priority = :priority)")
   Page<Todo> searchAll(
       @Param("keyword") String keyword,
       @Param("categoryId") Long categoryId,

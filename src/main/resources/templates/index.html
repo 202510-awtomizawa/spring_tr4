@@ -392,6 +392,52 @@
       top: 12px;
       right: 12px;
     }
+
+    .pager {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0 8px;
+    }
+
+    .pager a,
+    .pager span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      padding: 0 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #111827;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .pager .active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+      font-weight: bold;
+    }
+
+    .pager .disabled {
+      color: #9ca3af;
+      border-color: #e5e7eb;
+      pointer-events: none;
+      background: #f9fafb;
+    }
+
+    .pager-summary {
+      text-align: center;
+      color: #4b5563;
+      margin: 8px 0 16px;
+      font-size: 14px;
+    }
   </style>
 </head>
 
@@ -557,6 +603,23 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="pager-summary" th:if="${page != null}">
+      <span th:text="'全' + ${page.totalElements} + '件中 ' + ${rangeStart} + '-' + ${rangeEnd} + '件を表示'">
+        全0件中 0-0件を表示
+      </span>
+    </div>
+
+    <div class="pager" th:if="${page != null && page.totalPages > 1}">
+      <a th:classappend="${page.first} ? ' disabled' : ''"
+        th:href="@{/todos(page=${page.number - 1}, size=${page.size}, q=${q}, categoryId=${categoryId}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk})}">前へ</a>
+      <a th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+        th:classappend="${i == page.number} ? ' active' : ''"
+        th:text="${i + 1}"
+        th:href="@{/todos(page=${i}, size=${page.size}, q=${q}, categoryId=${categoryId}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk})}">1</a>
+      <a th:classappend="${page.last} ? ' disabled' : ''"
+        th:href="@{/todos(page=${page.number + 1}, size=${page.size}, q=${q}, categoryId=${categoryId}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk})}">次へ</a>
     </div>
 
     <div class="new-todo-wrap" th:if="${!bulk}">

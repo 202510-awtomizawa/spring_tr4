@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -72,19 +76,27 @@ public class TodoController {
       @RequestParam(name = "sort", defaultValue = "createdAt") String sortField,
       @RequestParam(name = "dir", defaultValue = "desc") String direction,
       @RequestParam(name = "bulk", defaultValue = "false") boolean bulk,
+      @PageableDefault(size = 10) Pageable pageable,
       @AuthenticationPrincipal UserDetails userDetails,
       Model model) {
     AppUser user = getCurrentUser(userDetails);
     Sort sort = Sort.by("completed").ascending()
         .and(Sort.by(Sort.Direction.fromString(direction), sortField));
-    List<Todo> todos = todoService.findAllForUserOrAll(keyword, categoryId, priority, user, sort);
-    model.addAttribute("todos", todos);
+    Pageable effectivePageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+    Page<Todo> page = todoService.findPageForUserOrAll(keyword, categoryId, priority, user, effectivePageable);
+    model.addAttribute("todos", page.getContent());
+    model.addAttribute("page", page);
     model.addAttribute("q", keyword == null ? "" : keyword);
     model.addAttribute("categoryId", categoryId);
     model.addAttribute("priority", priority);
     model.addAttribute("sort", sortField);
     model.addAttribute("dir", direction);
     model.addAttribute("bulk", bulk);
+    long total = page.getTotalElements();
+    int start = total == 0 ? 0 : page.getNumber() * page.getSize() + 1;
+    int end = total == 0 ? 0 : start + page.getNumberOfElements() - 1;
+    model.addAttribute("rangeStart", start);
+    model.addAttribute("rangeEnd", end);
     return "index";
   }
 
