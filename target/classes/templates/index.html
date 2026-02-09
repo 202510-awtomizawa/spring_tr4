@@ -582,7 +582,7 @@
     </div>
 
     <div id="search-panel" th:if="${!bulk}"
-      th:classappend="${(q != null && q != '') or categoryId != null or priority != null or sort != 'createdAt' or dir != 'desc'} ? ' open' : ''">
+      th:classappend="${(q != null && q != '') or priority != null or sort != 'createdAt' or dir != 'desc'} ? ' open' : ''">
       <form id="search-form" method="get" th:action="@{/todos}">
         <label><span th:text="#{label.search}">検索</span>:
           <input type="text" name="q" th:value="${q}">
