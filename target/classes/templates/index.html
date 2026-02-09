@@ -286,18 +286,17 @@
     .main-header-title {
       font-size: 24px;
     }
-    .lang-switch {
+    .sidebar-lang {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-left: 12px;
-      font-size: 12px;
+      gap: 6px;
+      font-size: 14px;
     }
-    .lang-switch a {
-      color: #2563eb;
+    .sidebar-lang a {
+      color: #111827;
       text-decoration: none;
     }
-    .lang-switch a:hover {
+    .sidebar-lang a:hover {
       text-decoration: underline;
     }
 
@@ -555,6 +554,16 @@
           <span class="sidebar-text" th:text="#{menu.login}">ログイン</span>
         </a>
       </li>
+      <li class="sidebar-item">
+        <div class="sidebar-link" aria-label="Language">
+          <span th:replace="~{action_icons :: micon('language')}"></span>
+          <span class="sidebar-text sidebar-lang">
+            <a th:href="@{/todos(lang='ja')}" th:text="#{lang.ja}">日本語</a>
+            <span>/</span>
+            <a th:href="@{/todos(lang='en')}" th:text="#{lang.en}">English</a>
+          </span>
+        </div>
+      </li>
     </ul>
   </aside>
 
@@ -563,11 +572,6 @@
       <span class="main-header-title" th:text="#{app.todo}">ToDo</span>
       <div class="new-todo-wrap" th:if="${!bulk}">
         <a class="new-todo-btn" th:href="@{/todos/new}" th:title="#{button.new}" th:aria-label="#{button.new}">＋</a>
-        <span class="lang-switch">
-          <a th:href="@{/todos(lang='ja')}" th:text="#{lang.ja}">日本語</a>
-          <span>/</span>
-          <a th:href="@{/todos(lang='en')}" th:text="#{lang.en}">English</a>
-        </span>
       </div>
     </div>
     <div class="page-header todo-header-card">
