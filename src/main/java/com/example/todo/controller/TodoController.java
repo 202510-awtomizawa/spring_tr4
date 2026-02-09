@@ -80,6 +80,16 @@ public class TodoController {
       @AuthenticationPrincipal UserDetails userDetails,
       Model model) {
     AppUser user = getCurrentUser(userDetails);
+    List<Category> categories = categoryService.findAllOrderById();
+    if (categoryId != null) {
+      for (int i = 0; i < categories.size(); i++) {
+        if (categoryId.equals(categories.get(i).getId())) {
+          Category selected = categories.remove(i);
+          categories.add(0, selected);
+          break;
+        }
+      }
+    }
     Sort sort = Sort.by("completed").ascending()
         .and(Sort.by(Sort.Direction.fromString(direction), sortField));
     Pageable effectivePageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
@@ -92,6 +102,7 @@ public class TodoController {
     model.addAttribute("sort", sortField);
     model.addAttribute("dir", direction);
     model.addAttribute("bulk", bulk);
+    model.addAttribute("categoriesForTabs", categories);
     long total = page.getTotalElements();
     int start = total == 0 ? 0 : page.getNumber() * page.getSize() + 1;
     int end = total == 0 ? 0 : start + page.getNumberOfElements() - 1;

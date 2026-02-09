@@ -135,7 +135,7 @@
 
     <div class="btn-group">
       <form method="post" th:action="@{/todos}" style="display:inline;">
-        <input type="hidden" name="id" th:value="${todo.id}">
+        <input type="hidden" name="id" th:if="${todo.id != null}" th:value="${todo.id}">
         <input type="hidden" name="author" th:value="${todo.author}">
         <input type="hidden" name="title" th:value="${todo.title}">
         <input type="hidden" name="detail" th:value="${todo.detail}">

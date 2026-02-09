@@ -135,7 +135,7 @@
     <h1 th:text="#{create.title}">ToDo登録</h1>
 
     <form method="post" th:action="@{/todos/confirm}" th:object="${todo}">
-      <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:if="*{id} != null" th:field="*{id}">
 
       <div class="form-row">
         <div class="form-group">

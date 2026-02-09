@@ -622,6 +622,23 @@
       </form>
     </div>
 
+    <div class="category-tabs">
+      <a class="category-tab"
+         th:classappend="${categoryId == null} ? ' active' : ''"
+         th:href="@{/todos(q=${q}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk}, lang=${#locale.language})}">
+        <span class="tab-icon" th:replace="~{action_icons :: micon('label')}"></span>
+        <span class="label" th:text="#{category.all}">全て</span>
+      </a>
+      <a class="category-tab"
+         th:each="c : ${categoriesForTabs}"
+         th:classappend="${categoryId != null and categoryId == c.id} ? ' active' : ''"
+         th:style="'background:' + ${c.color} + ';'"
+         th:href="@{/todos(categoryId=${c.id}, q=${q}, priority=${priority}, sort=${sort}, dir=${dir}, bulk=${bulk}, lang=${#locale.language})}">
+        <span class="tab-icon" th:replace="~{action_icons :: micon('label')}"></span>
+        <span class="label" th:text="${c.name}">Category</span>
+      </a>
+    </div>
+
     <form id="bulk-form" method="post" th:if="${bulk}" th:action="@{/todos/bulk/confirm}">
       <div class="bulk-header">
         <span>🗑 <span th:text="#{bulk.mode}">一括削除モード</span></span>
@@ -676,7 +693,10 @@
             <td class="col-hidden"
               th:classappend="${((todo.deadline != null && todo.isOverdue()) ? ' deadline-overdue' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() == 0) ? ' deadline-today' : '') + ((todo.deadline != null && todo.getDaysUntilDeadline() > 0 && todo.getDaysUntilDeadline() <= 3) ? ' deadline-soon' : '')}"
               th:text="${todo.deadline != null ? #temporals.format(todo.deadline, 'yyyy/MM/dd') : ''}"></td>
-            <td class="col-hidden" th:text="${todo.completed ? #{status.done} : #{status.todo}}">未完了</td>
+            <td class="col-hidden">
+              <span th:if="${todo.completed}" th:text="#{status.done}">完了</span>
+              <span th:unless="${todo.completed}" th:text="#{status.todo}">未完了</span>
+            </td>
             <td class="col-hidden" th:text="${#temporals.format(todo.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00
             </td>
             <td class="col-hidden" th:text="${#temporals.format(todo.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 00:00
